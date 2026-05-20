@@ -1,4 +1,0 @@
-- DNS zones are automatically getting the configuration from the master DNS, must create a cron job that updates the seril
-- in http we must remove the https port as it will be used by aproxy
-- NTP adn NFS must be declared in dhcp config file
-- 
