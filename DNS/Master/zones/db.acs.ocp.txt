@@ -1,0 +1,115 @@
+$TTL    604799
+@       IN      SOA     BD1-OCP-HN01.acs.ocp. contact.acs.ocp (
+         2026052054     ; Serial
+                500     ; Refresh
+              86400     ; Retry
+            2419200     ; Expire
+             604800     ; Minimum
+)
+        IN      NS      BD1-OCP-HN01
+        IN      NS      BD1-OCP-HN02
+
+BD1-OCP-HN01.acs.ocp.          IN      A       10.31.164.251
+BD1-OCP-HN02.acs.ocp.          IN      A       10.31.164.252
+
+; Temp
+BD1-OCP-BST01.hub.acs.ocp.        IN      A      10.31.164.10
+
+; HUB CLUSTER
+BD1-OCP-HUBM01.hub.acs.ocp.         IN      A      10.31.164.11
+BD1-OCP-HUBM02.hub.acs.ocp.         IN      A      10.31.164.12
+BD1-OCP-HUBM03.hub.acs.ocp.         IN      A      10.31.164.13
+
+BD1-OCP-HUBW01.hub.acs.ocp.        IN      A      10.31.164.111
+BD1-OCP-HUBW02.hub.acs.ocp.        IN      A      10.31.164.112
+BD1-OCP-HUBI01.hub.acs.ocp.        IN      A      10.31.164.113
+BD1-OCP-HUBI02.hub.acs.ocp.        IN      A      10.31.164.114
+
+api.hub.acs.ocp.        IN    A    10.31.164.215
+api-int.hub.acs.ocp.    IN    A    10.31.164.215
+*.apps.hub.acs.ocp.     IN    A    10.31.164.215
+
+etcd-0.hub.acs.ocp.    IN    A     10.31.164.11
+etcd-1.hub.acs.ocp.    IN    A     10.31.164.12
+etcd-2.hub.acs.ocp.    IN    A     10.31.164.13
+
+_etcd-server-ssl._tcp.hub.acs.ocp.    86400     IN    SRV     0    10    2380    etcd-0.hub
+_etcd-server-ssl._tcp.hub.acs.ocp.    86400     IN    SRV     0    10    2380    etcd-1.hub
+_etcd-server-ssl._tcp.hub.acs.ocp.    86400     IN    SRV     0    10    2380    etcd-2.hub
+
+oauth-openshift.apps.hub.acs.ocp.     IN     A     10.31.164.215
+console-openshift-console.apps.hub.acs.ocp.     IN     A     10.31.164.215
+
+
+; GPU CLUSTER
+BD1-OCP-GPUM01.gpu.acs.ocp.     IN    A    10.31.164.21
+BD1-OCP-GPUM02.gpu.acs.ocp.     IN    A    10.31.164.22
+BD1-OCP-GPUM03.gpu.acs.ocp.     IN    A    10.31.164.23
+
+BD1-OCP-GPUW11.gpu.acs.ocp.     IN    A    10.31.164.121
+BD1-OCP-GPUW12.gpu.acs.ocp.     IN    A    10.31.164.122
+BD1-OCP-GPUW21.gpu.acs.ocp.     IN    A    10.31.164.123
+BD1-OCP-GPUW22.gpu.acs.ocp.     IN    A    10.31.164.124
+
+api.gpu.acs.ocp.        IN    A    10.31.164.216
+api-int.gpu.acs.ocp.    IN    A    10.31.164.216
+*.apps.gpu.acs.ocp.     IN    A    10.31.164.216
+
+etcd-0.gpu.acs.ocp.    IN    A     10.31.164.21
+etcd-1.gpu.acs.ocp.    IN    A     10.31.164.22
+etcd-2.gpu.acs.ocp.    IN    A     10.31.164.23
+
+_etcd-server-ssl._tcp.gpu.acs.ocp.    86400     IN    SRV     0    10    2380    etcd-0.gpu
+_etcd-server-ssl._tcp.gpu.acs.ocp.    86400     IN    SRV     0    10    2380    etcd-1.gpu
+_etcd-server-ssl._tcp.gpu.acs.ocp.    86400     IN    SRV     0    10    2380    etcd-2.gpu
+
+oauth-openshift.apps.gpu.acs.ocp.     IN     A     10.31.164.216
+console-openshift-console.apps.gpu.acs.ocp.     IN     A     10.31.164.216
+
+
+; RHACS CLUSTER
+BD1-OCP-ACSM01.rhacs.acs.ocp.   IN   A    10.31.164.31
+BD1-OCP-ACSM02.rhacs.acs.ocp.   IN   A    10.31.164.32
+BD1-OCP-ACSM03.rhacs.acs.ocp.   IN   A    10.31.164.33
+BD1-OCP-ACSW01.rhacs.acs.ocp.   IN   A    10.31.164.131
+BD1-OCP-ACSW02.rhacs.acs.ocp.   IN   A    10.31.164.132
+BD1-OCP-ACSW03.rhacs.acs.ocp.   IN   A    10.31.164.133
+
+api.rhacs.acs.ocp.        IN    A    10.31.164.217
+api-int.rhacs.acs.ocp.    IN    A    10.31.164.217
+*.apps.rhacs.acs.ocp.     IN    A    10.31.164.217
+
+etcd-0.rhacs.acs.ocp.    IN    A     10.31.164.31
+etcd-1.rhacs.acs.ocp.    IN    A     10.31.164.32
+etcd-2.rhacs.acs.ocp.    IN    A     10.31.164.33
+
+_etcd-server-ssl._tcp.rhacs.acs.ocp.    86400     IN    SRV     0    10    2380    etcd-0.rhacs
+_etcd-server-ssl._tcp.rhacs.acs.ocp.    86400     IN    SRV     0    10    2380    etcd-1.rhacs
+_etcd-server-ssl._tcp.rhacs.acs.ocp.    86400     IN    SRV     0    10    2380    etcd-2.rhacs
+
+oauth-openshift.apps.rhacs.acs.ocp.     IN     A     10.31.164.217
+console-openshift-console.apps.rhacs.acs.ocp.     IN     A     10.31.164.217
+
+
+; HCI CLUSTER
+BD1-OCP-HCIM01.hci.acs.ocp.   IN   A    10.31.164.41
+BD1-OCP-HCIM02.hci.acs.ocp.   IN   A    10.31.164.42
+BD1-OCP-HCIM03.hci.acs.ocp.   IN   A    10.31.164.43
+BD1-OCP-HCIW01.hci.acs.ocp.   IN   A    10.31.164.141
+BD1-OCP-HCIW02.hci.acs.ocp.   IN   A    10.31.164.142
+BD1-OCP-HCIW03.hci.acs.ocp.   IN   A    10.31.164.143
+
+api.hci.acs.ocp.        IN    A    10.31.164.218
+api-int.hci.acs.ocp.    IN    A    10.31.164.218
+*.apps.hci.acs.ocp.     IN    A    10.31.164.218
+
+etcd-0.hci.acs.ocp.    IN    A     10.31.164.41
+etcd-1.hci.acs.ocp.    IN    A     10.31.164.42
+etcd-2.hci.acs.ocp.    IN    A     10.31.164.43
+
+_etcd-server-ssl._tcp.hci.acs.ocp.    86400     IN    SRV     0    10    2380    etcd-0.hci
+_etcd-server-ssl._tcp.hci.acs.ocp.    86400     IN    SRV     0    10    2380    etcd-1.hci
+_etcd-server-ssl._tcp.hci.acs.ocp.    86400     IN    SRV     0    10    2380    etcd-2.hci
+
+oauth-openshift.apps.hci.acs.ocp.     IN     A     10.31.164.218
+console-openshift-console.apps.hci.acs.ocp.     IN     A     10.31.164.218

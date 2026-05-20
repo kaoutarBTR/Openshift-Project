@@ -1,0 +1,79 @@
+global_defs {
+   notification_email {
+     acassen@firewall.loc
+     failover@firewall.loc
+     sysadmin@firewall.loc
+   }
+
+   #smtp_server 192.168.200.1
+   smtp_connect_timeout 30
+   router_id LVS_DEVEL_BACKUP
+   vrrp_skip_check_adv_addr
+   #vrrp_strict
+   vrrp_garp_interval 0
+   vrrp_gna_interval 0
+}
+
+
+vrrp_instance VI_HUB {
+    state BACKUP
+    interface ens33
+    virtual_router_id 51
+    priority 90
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1234
+    }
+    virtual_ipaddress {
+        10.31.164.215/24
+    }
+}
+
+
+vrrp_instance VI_GPU {
+    state BACKUP
+    interface ens33
+    virtual_router_id 52
+    priority 90
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1234
+    }
+    virtual_ipaddress {
+        10.31.164.216/24
+    }
+}
+
+
+vrrp_instance VI_RHACS {
+    state BACKUP
+    interface ens33
+    virtual_router_id 53
+    priority 90
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1234
+    }
+    virtual_ipaddress {
+        110.31.164.217/24
+    }
+}
+
+
+vrrp_instance VI_HCI {
+    state BACKUP
+    interface ens33
+    virtual_router_id 54
+    priority 90
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1234
+    }
+    virtual_ipaddress {
+        110.31.164.218/24
+    }
+}

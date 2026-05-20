@@ -1,0 +1,307 @@
+# Global settings
+#---------------------------------------------------------------------
+global
+    maxconn     20000
+    log         /dev/log local0 info
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    user        haproxy
+    group       haproxy
+    daemon
+
+    # turn on stats unix socket
+    stats socket /var/lib/haproxy/stats
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+    log                     global
+    mode                    http
+    #option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option redispatch
+    option forwardfor       except 126.0.0.0/8
+    retries                 3
+    maxconn                 20000
+    timeout http-request    10000ms
+    timeout http-keep-alive 10000ms
+    timeout check           10000ms
+    timeout connect         40000ms
+    timeout client          300000ms
+    timeout server          300000ms
+    timeout queue           50000ms
+
+# Enable HAProxy stats
+listen stats
+    bind :9000
+    stats uri /stats
+    stats refresh 10000ms
+
+#---------------------------------------------------------------------
+
+# HUB CLUSTER API VIP : 10.31.164.215
+# GPU CLUSTER API VIP : 10.31.164.216
+# ACS CLUSTER API VIP : 10.31.164.217
+# HCI CLUSTER API VIP : 10.31.164.218
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# HUB CLUSTER
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+# Kube API Server
+frontend hub_k8s_api_frontend
+    bind 10.31.164.215:6443
+    default_backend hub_k8s_api_backend
+    mode tcp
+
+backend hub_k8s_api_backend
+    mode tcp
+    balance source
+    #server      BD1-OCP-BST01 10.31.164.10:6443 check
+    server      BD1-OCP-HUBM01 10.31.164.11:6443 check
+    server      BD1-OCP-HUBM02 10.31.164.12:6443 check
+    server      BD1-OCP-HUBM03 10.31.164.13:6443 check
+
+# OCP Machine Config Server/var/lib/dhcpd/dhcpd.leases
+frontend hub_ocp_machine_config_server_frontend
+    mode tcp
+    bind 10.31.164.215:22623
+    default_backend hub_ocp_machine_config_server_backend
+
+backend hub_ocp_machine_config_server_backend
+    mode tcp
+    balance source
+    #server      BD1-OCP-BST01 10.31.164.10:22623 check
+    server      BD1-OCP-HUBM01 10.31.164.11:22623 check
+    server      BD1-OCP-HUBM02 10.31.164.12:22623 check
+    server      BD1-OCP-HUBM03 10.31.164.13:22623 check
+
+# OCP Ingress - layer 4 tcp mode for each. Ingress Controller will handle layer 7.
+frontend hub_ocp_http_ingress_frontend
+    bind 10.31.164.215:80
+    default_backend hub_ocp_http_ingress_backend
+    mode tcp
+
+backend hub_ocp_http_ingress_backend
+    balance source
+    mode tcp
+    #server      BD1-OCP-HUBW01 10.31.164.111:80 check
+    #server      BD1-OCP-HUBW02 10.31.164.112:80 check
+    server      BD1-OCP-HUBI01 10.31.164.113:80 check
+    server      BD1-OCP-HUBI02 10.31.164.114:80 check
+
+
+frontend hub_ocp_https_ingress_frontend
+    bind 10.31.164.215:443
+    default_backend hub_ocp_https_ingress_backend
+    mode tcp
+
+backend hub_ocp_https_ingress_backend
+    mode tcp
+    balance source
+    #server      BD1-OCP-HUBW01 10.31.164.111:443 check
+    #server      BD1-OCP-HUBW02 10.31.164.112:443 check
+    server      BD1-OCP-HUBI01 10.31.164.113:443 check
+    server      BD1-OCP-HUBI02 10.31.164.114:443 check
+
+
+
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# GPU CLUSTER
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+frontend gpu_k8s_api_frontend
+    bind 10.31.164.216:6443
+    mode tcp
+    default_backend gpu_k8s_api_backend
+
+backend gpu_k8s_api_backend
+    mode tcp
+    balance roundrobin
+    #option tcp-check
+
+    server BD1-OCP-GPUM01 10.31.164.21:6443 check
+    server BD1-OCP-GPUM02 10.31.164.22:6443 check
+    server BD1-OCP-GPUM03 10.31.164.23:6443 check
+
+
+
+frontend gpu_ocp_machine_config_server_frontend
+    bind 10.31.164.216:22623
+    mode tcp
+    default_backend gpu_ocp_machine_config_server_backend
+
+backend gpu_ocp_machine_config_server_backend
+    mode tcp
+    balance roundrobin
+    #option tcp-check
+
+    server BD1-OCP-GPUM01 10.31.164.21:22623 check
+    server BD1-OCP-GPUM02 10.31.164.22:22623 check
+    server BD1-OCP-GPUM03 10.31.164.23:22623 check
+
+
+frontend gpu_ocp_http_ingress_frontend
+    bind 10.31.164.216:80
+    mode tcp
+    default_backend gpu_ocp_http_ingress_backend
+
+backend gpu_ocp_http_ingress_backend
+    mode tcp
+    balance roundrobin
+
+    server BD1-OCP-GPUW11 10.31.164.121:80 check
+    server BD1-OCP-GPUW12 10.31.164.122:80 check
+    server BD1-OCP-GPUW21 10.31.164.123:80 check
+    server BD1-OCP-GPUW22 10.31.164.124:80 check
+
+
+frontend gpu_ocp_https_ingress_frontend
+    bind 10.31.164.216:443
+    mode tcp
+    default_backend gpu_ocp_https_ingress_backend
+
+backend gpu_ocp_https_ingress_backend
+    mode tcp
+    balance roundrobin
+
+    server BD1-OCP-GPUW11 10.31.164.121:443 check
+    server BD1-OCP-GPUW12 10.31.164.122:443 check
+    server BD1-OCP-GPUW21 10.31.164.123:443 check
+    server BD1-OCP-GPUW22 10.31.164.124:443 check
+
+
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# ACS CLUSTER
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+frontend acs_api_frontend
+    bind 10.31.164.217:6443
+    mode tcp
+    default_backend acs_api_backend
+
+backend acs_api_backend
+    mode tcp
+    balance roundrobin
+    #option tcp-check
+
+    server BD1-OCP-ACSM01 10.31.164.31:6443 check
+    server BD1-OCP-ACSM02 10.31.164.32:6443 check
+    server BD1-OCP-ACSM03 10.31.164.33:6443 check
+
+
+frontend acs_ocp_machine_config_server_frontend
+    bind 10.31.164.217:22623
+    mode tcp
+    default_backend acs_ocp_machine_config_server_backend
+
+backend acs_ocp_machine_config_server_backend
+    mode tcp
+    balance roundrobin
+    #option tcp-check
+
+    server BD1-OCP-ACSM01 10.31.164.31:22623 check
+    server BD1-OCP-ACSM02 10.31.164.32:22623 check
+    server BD1-OCP-ACSM03 10.31.164.33:22623 check
+
+
+frontend acs_ocp_http_ingress_frontend
+    bind 10.31.164.217:80
+    mode tcp
+    default_backend acs_ocp_http_ingress_backend
+
+backend acs_ocp_http_ingress_backend
+    mode tcp
+    balance roundrobin
+    #option tcp-check
+
+    server BD1-OCP-ACSW01 10.31.164.131:80 check
+    server BD1-OCP-ACSW02 10.31.164.132:80 check
+    server BD1-OCP-ACSW03 10.31.164.133:80 check
+
+
+
+frontend acs_ocp_https_ingress_frontend
+    bind 10.31.164.217:443
+    mode tcp
+    default_backend acs_ocp_https_ingress_backend
+
+backend acs_ocp_https_ingress_backend
+    mode tcp
+    balance roundrobin
+    #option tcp-check
+
+    server BD1-OCP-ACSW01 10.31.164.131:443 check
+    server BD1-OCP-ACSW02 10.31.164.132:443 check
+    server BD1-OCP-ACSW03 10.31.164.133:443 check
+
+
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# HCI CLUSTER
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+frontend hci_api_frontend
+    bind 10.31.164.218:6443
+    mode tcp
+    default_backend hci_api_backend
+
+backend hci_api_backend
+    mode tcp
+    balance roundrobin
+    #option tcp-check
+
+    server BD1-OCP-HCIM01 10.31.164.41:6443 check
+    server BD1-OCP-HCIM02 10.31.164.42:6443 check
+    server BD1-OCP-HCIM03 10.31.164.43:6443 check
+
+
+
+frontend hci_ocp_machine_config_server_frontend
+    bind 10.31.164.218:22623
+    mode tcp
+    default_backend hci_ocp_machine_config_server_backend
+
+backend hci_ocp_machine_config_server_backend
+    mode tcp
+    balance roundrobin
+    #option tcp-check
+
+    server BD1-OCP-HCIM01 10.31.164.41:22623 check
+    server BD1-OCP-HCIM02 10.31.164.42:22623 check
+    server BD1-OCP-HCIM03 10.31.164.43:22623 check
+
+
+
+frontend hci_ocp_http_ingress_frontend
+    bind 10.31.164.218:80
+    mode tcp
+    default_backend hci_ocp_http_ingress_backend
+
+backend hci_ocp_http_ingress_backend
+    mode tcp
+    balance roundrobin
+
+    server BD1-OCP-HCIW01 10.31.164.141:80 check
+    server BD1-OCP-HCIW02 10.31.164.142:80 check
+    server BD1-OCP-HCIW03 10.31.164.143:80 check
+
+
+
+frontend hci_ocp_https_ingress_frontend
+    bind 10.31.164.218:443
+    mode tcp
+    default_backend hci_ocp_https_ingress_backend
+
+backend hci_ocp_https_ingress_backend
+    mode tcp
+    balance roundrobin
+
+    server BD1-OCP-HCIW01 10.31.164.141:443 check
+    server BD1-OCP-HCIW02 10.31.164.142:443 check
+    server BD1-OCP-HCIW03 10.31.164.143:443 check

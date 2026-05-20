@@ -1,0 +1,62 @@
+$TTL    604800
+@       IN      SOA     BD1-OCP-HN01.acs.ocp  contact.acs.ocp (
+                 2026052055     ; Serial
+                500     ; Refresh
+              86400     ; Retry
+            2419200     ; Expire
+             604800     ; Minimum
+)
+
+       IN      NS      BD1-OCP-HN01.acs.ocp.
+       IN      NS      BD1-OCP-HN02.acs.ocp.
+
+251    IN    PTR    BD1-OCP-HN01.acs.ocp.
+252    IN    PTR    BD1-OCP-HNO2.acs.ocp.
+;
+215    IN    PTR    api.hub.acs.ocp.
+215    IN    PTR    api-int.hub.acs.ocp.
+;
+10     IN    PTR    BD1-OCP-BST01.hub.acs.ocp.
+;
+11     IN    PTR    BD1-OCP-HUBM01.hub.acs.ocp.
+12     IN    PTR    BD1-OCP-HUBM02.hub.acs.ocp.
+13     IN    PTR    BD1-OCP-HUBM03.hub.acs.ocp.
+;
+111    IN    PTR    BD1-OCP-HUBW01.hub.acs.ocp.
+112    IN    PTR    BD1-OCP-HUBW02.hub.acs.ocp.
+113    IN    PTR    BD1-OCP-HUBI01.hub.acs.ocp.
+114    IN    PTR    BD1-OCP-HUBI02.hub.acs.ocp.
+;
+21     IN    PTR    BD1-OCP-GPUM01.gpu.acs.ocp.
+22     IN    PTR    BD1-OCP-GPUM02.gpu.acs.ocp.
+23     IN    PTR    BD1-OCP-GPUM03.gpu.acs.ocp.
+;
+121    IN    PTR    BD1-OCP-GPUW11.gpu.acs.ocp.
+122    IN    PTR    BD1-OCP-GPUW12.gpu.acs.ocp.
+123    IN    PTR    BD1-OCP-GPUW21.gpu.acs.ocp.
+124    IN    PTR    BD1-OCP-GPUW22.gpu.acs.ocp.
+;
+216    IN    PTR    api.gpu.acs.ocp.
+216    IN    PTR    api-int.gpu.acs.ocp.
+;
+31     IN    PTR    BD1-OCP-ACSM01.rhacs.acs.ocp.
+32     IN    PTR    BD1-OCP-ACSM02.rhacs.acs.ocp.
+33     IN    PTR    BD1-OCP-ACSM03.rhacs.acs.ocp.
+;
+131    IN    PTR    BD1-OCP-ACSW01.rhacs.acs.ocp.
+132    IN    PTR    BD1-OCP-ACSW02.rhacs.acs.ocp.
+133    IN    PTR    BD1-OCP-ACSW03.rhacs.acs.ocp.
+;
+217    IN    PTR    api.rhacs.acs.ocp.
+217    IN    PTR    api-int.rhacs.acs.ocp.
+;
+41     IN    PTR    BD1-OCP-HCIM01.hci.acs.ocp.
+42     IN    PTR    BD1-OCP-HCIM02.hci.acs.ocp.
+43     IN    PTR    BD1-OCP-HCIM03.hci.acs.ocp.
+;
+141    IN    PTR    BD1-OCP-HCIW01.hci.acs.ocp.
+142    IN    PTR    BD1-OCP-HCIW02.hci.acs.ocp.
+143    IN    PTR    BD1-OCP-HCIW03.hci.acs.ocp.
+;
+218    IN    PTR    api.hci.acs.ocp.
+218    IN    PTR    api-int.hci.acs.ocp.

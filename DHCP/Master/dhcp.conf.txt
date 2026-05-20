@@ -1,0 +1,193 @@
+authoritative;
+ddns-update-style interim;
+allow booting;
+allow bootp;
+allow unknown-clients;
+ignore client-updates;
+default-lease-time 14400;
+max-lease-time 14400;
+
+
+failover peer "acs-ocp-dhcp-ha" {
+  primary;
+  address 10.31.164.251;
+  port 647;
+  peer address 10.31.164.252;
+  peer port 647;
+  max-response-delay 60;
+  max-unacked-updates 10;
+  load balance max seconds 3;
+  mclt 1800;
+  split 128;
+
+}
+
+
+option space pxelinux;
+option pxelinux.magic code 208 = string;
+option pxelinux.configfile code 209 = text;
+option pxelinux.pathprefix code 210 = text;
+option pxelinux.reboottime code 211 = unsigned integer 32;
+option architecture-type code 93 = unsigned integer 16;
+option domain-search-list code 119 = text;
+subnet 10.31.164.0 netmask 255.255.255.0 {
+ option routers                  10.31.164.254; 
+ option subnet-mask              255.255.255.0;
+ option domain-name              "acs.ocp";
+ option ntp-servers     10.31.164.251;
+ option domain-search-list      "acs.ocp hub.acs.ocp";
+ option domain-name-servers      10.31.164.251, 10.31.164.252;
+    class "pxeclients" {
+        match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
+        next-server 10.31.164.251;
+
+        if option architecture-type = 00:07 {
+            filename "BOOTX64.EFI";
+        }
+        else {
+            filename "pxelinux.0";
+        }
+    }
+ #option tftp-server-name  "10.31.164.251";
+ #next-server   10.31.164.251;
+ #option bootfile-name    "BOOTX64.EFI";
+ pool {
+  failover peer "acs-ocp-dhcp-ha";
+  range 10.31.164.150 10.31.164.200;
+ }
+}
+
+host BD1-OCP-ACSM01 {
+    hardware ethernet 00:50:56:97:06:e3;
+    fixed-address 10.31.164.31;
+}
+
+host BD1-OCP-ACSM02 {
+    hardware ethernet 00:50:56:97:1b:73;
+    fixed-address 10.31.164.32;
+}
+
+host BD1-OCP-ACSM03 {
+    hardware ethernet 00:50:56:97:a9:98;
+    fixed-address 10.31.164.33;
+}
+
+host BD1-OCP-ACSW01 {
+    hardware ethernet 00:50:56:97:02:7b;
+    fixed-address 10.31.164.131;
+}
+
+host BD1-OCP-ACSW02 {
+    hardware ethernet 00:50:56:97:64:ff;
+    fixed-address 10.31.164.132;
+}
+
+host BD1-OCP-ACSW03 {
+    hardware ethernet 00:50:56:97:98:78;
+    fixed-address 10.31.164.133;
+}
+
+host BD1-OCP-BST01 {
+    hardware ethernet 00:50:56:97:1a:c0;
+    fixed-address 10.31.164.10;
+}
+
+host BD1-OCP-GPUM01 {
+    hardware ethernet 00:50:56:97:c8:c8;
+    fixed-address 10.31.164.21;
+}
+
+host BD1-OCP-GPUM02 {
+    hardware ethernet 00:50:56:97:dd:a2;
+    fixed-address 10.31.164.22;
+}
+
+host BD1-OCP-GPUM03 {
+    hardware ethernet 00:50:56:97:26:10;
+    fixed-address 10.31.164.23;
+}
+
+host BD1-OCP-GPUW11 {
+    hardware ethernet 00:50:56:97:81:ff;
+    fixed-address 10.31.164.121;
+}
+
+host BD1-OCP-GPUW12 {
+    hardware ethernet 00:50:56:97:ef:df;
+    fixed-address 10.31.164.122;
+}
+
+host BD1-OCP-GPUW21 {
+    hardware ethernet 00:50:56:97:fb:bc;
+    fixed-address 10.31.164.123;
+}
+
+host BD1-OCP-GPUW22 {
+    hardware ethernet 00:50:56:97:e3:0c;
+    fixed-address 10.31.164.124;
+}
+
+host BD1-OCP-HCIM01 {
+    hardware ethernet 00:50:56:97:a1:fb;
+    fixed-address 10.31.164.41;
+}
+
+host BD1-OCP-HCIM02 {
+    hardware ethernet 00:50:56:97:f8:7c;
+    fixed-address 10.31.164.42;
+}
+
+host BD1-OCP-HCIM03 {
+    hardware ethernet 00:50:56:97:f2:a4;
+    fixed-address 10.31.164.43;
+}
+
+host BD1-OCP-HCIW01 {
+    hardware ethernet 00:50:56:97:46:49;
+    fixed-address 10.31.164.141;
+}
+
+host BD1-OCP-HCIW02 {
+    hardware ethernet 00:50:56:97:5a:56;
+    fixed-address 10.31.164.142;
+}
+
+host BD1-OCP-HCIW03 {
+    hardware ethernet 00:50:56:97:83:4d;
+    fixed-address 10.31.164.143;
+}
+
+host BD1-OCP-HUBI01 {
+    hardware ethernet 00:50:56:97:9a:82;
+    fixed-address 10.31.164.113;
+}
+
+host BD1-OCP-HUBI02 {
+    hardware ethernet 00:50:56:97:25:44;
+    fixed-address 10.31.164.114;
+}
+
+host BD1-OCP-HUBM01 {
+    hardware ethernet 00:50:56:97:ab:20;
+    fixed-address 10.31.164.11;
+}
+
+host BD1-OCP-HUBM02 {
+    hardware ethernet 00:50:56:97:f9:6c;
+    fixed-address 10.31.164.12;
+}
+
+host BD1-OCP-HUBM03 {
+    hardware ethernet 00:50:56:97:b5:93;
+    fixed-address 10.31.164.13;
+}
+
+host BD1-OCP-HUBW01 {
+    hardware ethernet 00:50:56:97:fc:7f;
+    fixed-address 10.31.164.111;
+}
+
+host BD1-OCP-HUBW02 {
+    hardware ethernet 00:50:56:97:0e:84;
+    fixed-address 10.31.164.112;
+}
